@@ -1,11 +1,12 @@
 package com.test.jsonb.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.*;
 
-import com.test.jsonb.dto.OrdersDataDto;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -16,7 +17,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "orders")
-@TypeDef(name = "jsonb[]", typeClass = JsonBinaryType.class)
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,9 +70,10 @@ public class Order {
     private int orderStatus = 0;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private Long user_id;
 
-    @Type(type = "jsonb[]")
-    @Column(name = "order_item", columnDefinition = "jsonb[]")
-    private OrderItem[] order_item;
+    @Type(type = "jsonb")
+    @Column(name = "order_item", columnDefinition = "jsonb")
+//    private OrderItem[] order_item;
+    private List<Map<String, Object>> order_item;
 }

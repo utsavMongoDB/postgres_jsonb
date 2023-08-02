@@ -7,22 +7,16 @@ import com.test.jsonb.models.OrderItem;
 import com.test.jsonb.models.Product;
 import com.test.jsonb.models.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 
 public interface OrdersMapper {
-    OrdersDto toOrderDto(Order orders);
+    @Mapping(target = "orderId", source = "orderId")
     Order toOrder(OrdersDto ordersDto);
 
-    UserDto toUserDto(User user);
-    User toUser(UserDto userDto);
-
-    OrderItemDto toOrderItem(OrderItem orderItem);
-    OrderItem toOrdersItemDto(OrderItemDto orderItemDto);
-
-    ProductDto toProductDto(Product product);
-    Product toProduct(ProductDto productDto);
-
+    OrderItem toOrdersItem(OrderItemDto orderItemDto);
+    OrderItemDto toOrderItemDto(OrderItem orderItem);
 
 }

@@ -8,11 +8,14 @@ public class OrderItemDto {
     @JsonProperty("order_item_id")
     private Long orderItemId;
 
+    @JsonProperty("order_id")
+    private Long orderId;
+
     @JsonProperty("product_id")
     private Long productId;
 
     @JsonProperty("quantity")
-    private String quantity;
+    private Integer product_id;
 
     @JsonProperty("rate")
     private String rate;

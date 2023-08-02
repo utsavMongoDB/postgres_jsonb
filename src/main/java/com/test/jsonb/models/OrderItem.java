@@ -5,6 +5,8 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
+@Data
+@Table(name = "order_item")
 public class OrderItem {
 
     @Id
@@ -12,7 +14,7 @@ public class OrderItem {
     @Column(name = "order_item_id")
     private Long orderItemId;
 
-    @Column(name = "order_id", nullable = false)
+    @Column(name = "order_id")
     private Long orderId;
 
     @ManyToOne
