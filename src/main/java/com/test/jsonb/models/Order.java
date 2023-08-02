@@ -68,9 +68,8 @@ public class Order {
     @Column(name = "order_status", nullable = false)
     private int orderStatus = 0;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Type(type = "jsonb[]")
     @Column(name = "order_item", columnDefinition = "jsonb[]")
