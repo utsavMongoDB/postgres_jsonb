@@ -4,12 +4,11 @@ import javax.validation.Valid;
 
 import com.test.jsonb.dto.OrdersDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.test.jsonb.services.OrderService;
+
+import java.util.List;
 
 
 @RestController
@@ -32,5 +31,10 @@ public class OrderController {
     @PostMapping("/orders")
     public String saveOrders(@RequestBody @Valid final OrdersDto ordersDto) {
         return OrderService.saveOrders(ordersDto);
+    }
+
+    @GetMapping("/test")
+    public List<Object[]> getOrder() {
+        return OrderService.getOrdersByUserId(1);
     }
 }
