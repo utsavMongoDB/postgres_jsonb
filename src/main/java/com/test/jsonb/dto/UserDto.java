@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class UserDto {
     @JsonProperty("user_id")
-    private Long userId;
+    private Long user_id;
 
     @JsonProperty("username")
     private String username;

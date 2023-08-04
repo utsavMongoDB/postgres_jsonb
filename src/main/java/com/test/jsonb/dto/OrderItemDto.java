@@ -6,23 +6,20 @@ import lombok.Data;
 @Data
 public class OrderItemDto {
     @JsonProperty("order_item_id")
-    private Long orderItemId;
-
-    @JsonProperty("order_id")
-    private Long orderId;
+    private int orderItemId;
 
     @JsonProperty("product_id")
-    private Long productId;
+    private int productId;
 
     @JsonProperty("quantity")
-    private Integer product_id;
+    private int quantity;
 
     @JsonProperty("rate")
-    private String rate;
+    private int rate;
 
     @JsonProperty("total")
-    private String total;
+    private int total;
 
     @JsonProperty("order_item_status")
-    private Integer orderItemStatus = 0;
+    private int orderItemStatus;
 }

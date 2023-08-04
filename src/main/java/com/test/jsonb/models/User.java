@@ -1,7 +1,10 @@
 package com.test.jsonb.models;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -9,7 +12,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Long user_id;
 
     @Column(name = "username", nullable = false)
     private String username;

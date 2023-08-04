@@ -19,6 +19,7 @@ import lombok.Data;
 @Table(name = "orders")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -34,25 +35,25 @@ public class Order {
     private String clientContact;
 
     @Column(name = "sub_total", nullable = false)
-    private String subTotal;
+    private int subTotal;
 
     @Column(name = "vat", nullable = false)
-    private String vat;
+    private int vat;
 
     @Column(name = "total_amount", nullable = false)
-    private String totalAmount;
+    private int totalAmount;
 
     @Column(name = "discount", nullable = false)
-    private String discount;
+    private int discount;
 
     @Column(name = "grand_total", nullable = false)
-    private String grandTotal;
+    private int grandTotal;
 
     @Column(name = "paid", nullable = false)
-    private String paid;
+    private int paid;
 
     @Column(name = "due", nullable = false)
-    private String due;
+    private int due;
 
     @Column(name = "payment_type", nullable = false)
     private int paymentType;
@@ -70,10 +71,11 @@ public class Order {
     private int orderStatus = 0;
 
     @Column(name = "user_id", nullable = false)
-    private Long user_id;
+    private Long userId;
 
     @Type(type = "jsonb")
     @Column(name = "order_item", columnDefinition = "jsonb")
-//    private OrderItem[] order_item;
-    private List<Map<String, Object>> order_item;
+    private List<Map<String, Object>> orderItem;
+
+    // Constructors, getters, setters, etc.
 }
