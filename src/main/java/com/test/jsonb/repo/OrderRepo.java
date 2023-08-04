@@ -1,10 +1,11 @@
 package com.test.jsonb.repo;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import com.test.jsonb.models.Order;
+import com.test.jsonb.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +23,8 @@ public interface OrderRepo extends JpaRepository<Order, String> {
             "FROM orders o " +
             "JOIN users u ON o.user_id = u.user_id " +
             "WHERE o.order_date BETWEEN :startDate AND :endDate " +
-            "GROUP BY u.username", nativeQuery = true)
+            "GROUP BY u.username " +
+            "ORDER BY total_order_amount DESC ", nativeQuery = true)
     List<String> getTotalOrderAmountInRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
@@ -39,10 +41,18 @@ public interface OrderRepo extends JpaRepository<Order, String> {
     List<Object[]> findTopProductsInDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
-    @Query(value = "SELECT o.sub_total " +
-            "FROM orders o " +
-            "CROSS JOIN jsonb_array_elements(o.order_item) AS item " +
-            "WHERE (item->>'order_item_id')::::int = :orderItemId", nativeQuery = true)
-    String getOrdersByUserId(@Param("orderItemId") Integer orderItemId);
-
+    @Query(value =
+            "SELECT p.* " +
+                    "FROM product p " +
+                    "JOIN ( " +
+                    "    SELECT DISTINCT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
+                    "    FROM orders " +
+                    "    WHERE user_id = :userId " +
+                    "    AND order_date BETWEEN :startDate AND :endDate " +
+                    ") AS ordered_products " +
+                    "ON p.product_id = ordered_products.product_id",
+            nativeQuery = true)
+    List<Object[]> findProductsOrderedByUserInDateRange(@Param("userId") int userId,
+                                                       @Param("startDate") Date startDate,
+                                                       @Param("endDate") Date endDate);
 }

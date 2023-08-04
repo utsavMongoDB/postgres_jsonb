@@ -7,11 +7,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.test.jsonb.dto.OrdersDto;
 import com.test.jsonb.mapper.Mapper;
 import com.test.jsonb.models.Order;
+import com.test.jsonb.models.Product;
 import com.test.jsonb.repo.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.validation.Valid;
 
 @Service
 public class OrderService {
@@ -25,9 +24,8 @@ public class OrderService {
         return orderRepo.findAll();
     }
 
-    // Get users by ID
-    public String getOrdersByUserId(int orderItemId) {
-        return orderRepo.getOrdersByUserId(orderItemId);
+    public List<Object[]> findProductsOrderedByUserInDateRange(int userId, Date startDate , Date endDate) {
+        return orderRepo.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
     }
 
     public List<String> getTotalOrderAmountInRange(Date startDate, Date endDate) {
