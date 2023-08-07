@@ -1,6 +1,7 @@
 package com.test.jsonb.controllers;
 
 import com.test.jsonb.models.Order;
+import com.test.jsonb.utils.DateGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -39,43 +40,53 @@ public class OrderController {
     /**
      * Find all products ordered by a user in a particular date range
      * @param userId
-     * @param startDate
-     * @param endDate
      * @return
      */
     @GetMapping("/get/{userId}/{startDate}/{endDate}")
-    public List<Object[]> findProductsOrderedByUserInDateRange(@PathVariable int userId,
-                                                              @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                                              @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        return OrderService.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
+    public List<Object[]> findProductsOrderedByUserInDateRange(@PathVariable int userId) {
+        try {
+            Date randomStartDate = DateGenerator.generateRandomStartDate();
+            Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
+            return OrderService.findProductsOrderedByUserInDateRange(userId, randomStartDate, randomEndDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * Returns list of all users in the database with the total order amount ordered,
      * ORDERED by order amount
-     * @param startDate
-     * @param endDate
      * @return
      */
     @GetMapping("/getOrderAmount/{startDate}/{endDate}")
-    public List<String> getTotalOrderAmountInRange(
-            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        return OrderService.getTotalOrderAmountInRange(startDate, endDate);
+    public List<String> getTotalOrderAmountInRange() {
+        try {
+            Date randomStartDate = DateGenerator.generateRandomStartDate();
+            Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
+            return OrderService.getTotalOrderAmountInRange(randomStartDate, randomEndDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
     /**
      * Find top 5 products in a given date range.
-     * @param startDate
-     * @param endDate
      * @return
      */
     @GetMapping("/findTopProducts/{startDate}/{endDate}")
-    public List<Object[]> findTopProductsInDateRange(
-            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        return OrderService.findTopProductsInDateRange(startDate, endDate);
+    public List<Object[]> findTopProductsInDateRange() {
+        try {
+            Date randomStartDate = DateGenerator.generateRandomStartDate();
+            Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
+            return OrderService.findTopProductsInDateRange(randomStartDate, randomEndDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 
