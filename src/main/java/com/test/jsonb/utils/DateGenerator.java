@@ -9,13 +9,20 @@ public class DateGenerator {
 
     private static final String MIN_DATE_STR = "2023-01-01";
     private static final String MAX_DATE_STR = "2023-07-30";
+    private static final Date MIN_DATE;
+    private static final Date MAX_DATE;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    static {
+        try {
+            MIN_DATE = new SimpleDateFormat("yyyy-MM-dd").parse(MIN_DATE_STR);
+            MAX_DATE = new SimpleDateFormat("yyyy-MM-dd").parse(MAX_DATE_STR);
+        } catch (ParseException e) {
+            throw new ExceptionInInitializerError("Failed to parse date strings.");
+        }
+    }
 
-    public static Date generateRandomStartDate() throws ParseException {
-        Date minDate = dateFormat.parse(MIN_DATE_STR);
-        Date maxDate = dateFormat.parse(MAX_DATE_STR);
-        long randomTime = minDate.getTime() + (long) (Math.random() * (maxDate.getTime() - minDate.getTime()));
+    public static Date generateRandomStartDate() {
+        long randomTime = MIN_DATE.getTime() + (long) (Math.random() * (MAX_DATE.getTime() - MIN_DATE.getTime()));
         return new Date(randomTime);
     }
 
@@ -25,14 +32,8 @@ public class DateGenerator {
         calendar.add(Calendar.DATE, (int) (Math.random() * 7)); // Add 0 to 6 days
         Date endDate = calendar.getTime();
 
-        // Ensure that endDate is not greater than maxDate
-        try {
-            Date maxDate = dateFormat.parse(MAX_DATE_STR);
-            if (endDate.after(maxDate)) {
-                endDate = maxDate;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (endDate.after(MAX_DATE)) {
+            endDate = MAX_DATE;
         }
 
         return endDate;
