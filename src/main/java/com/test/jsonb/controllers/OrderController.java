@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.test.jsonb.services.OrderService;
 
 import java.util.*;
+import java.util.random.RandomGenerator;
 
 
 @RestController
@@ -17,6 +18,8 @@ public class OrderController {
     
     @Autowired
     private OrderService OrderService;
+
+    Random random = new Random();
 
     /**
      * Add Orders using an order ID; randomized data is generated using the ID
@@ -93,14 +96,13 @@ public class OrderController {
     /**
      * Update the order status for a orderId in JSONB array
      * @param orderId
-     * @param orderStatus
      * @return
      */
-    @PutMapping("/updateOrderItemStatus/{orderId}/{orderStatus}")
+    @PutMapping("/updateOrderItemStatus/{orderId}")
     public String updateOrderItemStatus(
-            @PathVariable int orderId,
-            @PathVariable int orderStatus
+            @PathVariable int orderId
     ) {
+        int orderStatus = random.nextInt(100);
         return OrderService.updateOrderItemStatus(orderId, orderStatus);
     }
 }
