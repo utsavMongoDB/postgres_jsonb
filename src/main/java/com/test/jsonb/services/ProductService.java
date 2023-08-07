@@ -37,8 +37,8 @@ public class ProductService {
         productDto.setProduct_id((long) productId);
         productDto.setProduct_name("Product " + productId);
         productDto.setProduct_image("image" + productId + ".jpg");
-        productDto.setBrand_id(generateRandomNumber(1, 10)); // Replace with your own range
-        productDto.setCategories_id(generateRandomNumber(1, 5)); // Replace with your own range
+        productDto.setBrand_id(generateRandomNumber(1, 10));
+        productDto.setCategories_id(generateRandomNumber(1, 5));
         productDto.setQuantity(generateRandomNumber(1, 100));
         productDto.setRate(generateRandomNumber(10, 1000) );
         productDto.setActive(1);

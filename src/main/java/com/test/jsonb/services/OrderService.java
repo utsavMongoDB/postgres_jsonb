@@ -28,6 +28,11 @@ public class OrderService {
         return orderRepo.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
     }
 
+    public String updateOrderItemStatus(int orderId, int newOrderItemStatus) {
+        orderRepo.updateOrderItemStatus(orderId, newOrderItemStatus);
+        return "Modified orderId: " + orderId;
+    }
+
     public List<String> getTotalOrderAmountInRange(Date startDate, Date endDate) {
         return orderRepo.getTotalOrderAmountInRange(startDate, endDate);
     }
@@ -37,10 +42,15 @@ public class OrderService {
     }
 
     public String saveOrders(int orderId) {
-        OrdersDto ordersDto = generateOrdersDto(orderId);
-        Order entity = mapper.toOrder(ordersDto);
-        orderRepo.save(entity);
-        return "Added Successfully";
+        try {
+            OrdersDto ordersDto = generateOrdersDto(orderId);
+            Order entity = mapper.toOrder(ordersDto);
+            orderRepo.save(entity);
+            return "Added Successfully";
+        }
+        catch (Exception e) {
+            return "Error Adding Order";
+        }
     }
 
     public Object findOrderById(String id) {
@@ -51,7 +61,7 @@ public class OrderService {
     public static OrdersDto generateOrdersDto(int orderId) {
         Random random = new Random();
 
-        LocalDate startDate = LocalDate.of(2023, 1, 1);
+        LocalDate startDate = LocalDate.of(2023, 7, 15);
         LocalDate endDate = LocalDate.of(2023, 7, 31);
         LocalDate orderDate = generateRandomDate(startDate, endDate);
 
@@ -69,7 +79,7 @@ public class OrderService {
         int paymentPlace = random.nextInt(2) + 1;
         String gstn = generateRandomGSTN();
         int orderStatus = 0;
-        Long userId = (long) generateRandomNumber(1, 1000);
+        Long userId = (long) generateRandomNumber(1, 10000);
         List<Map<String, Object>> orderItems = generateRandomOrderItems();
 
         OrdersDto ordersDto = new OrdersDto();
@@ -116,7 +126,7 @@ public class OrderService {
         for (int i = 0; i < itemCount; i++) {
             Map<String, Object> orderItem = new HashMap<>();
             orderItem.put("order_item_id", i);
-            orderItem.put("product_id", generateRandomNumber(1, 1000));
+            orderItem.put("product_id", generateRandomNumber(1, 10000));
             orderItem.put("quantity", random.nextInt(5) + 1);
             orderItem.put("rate", generateRandomNumber(50, 200));
             orderItem.put("total", (int) orderItem.get("quantity") * (int) orderItem.get("rate"));

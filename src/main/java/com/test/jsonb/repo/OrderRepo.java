@@ -1,15 +1,16 @@
 package com.test.jsonb.repo;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 import com.test.jsonb.models.Order;
-import com.test.jsonb.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Order, String> {
@@ -55,4 +56,27 @@ public interface OrderRepo extends JpaRepository<Order, String> {
     List<Object[]> findProductsOrderedByUserInDateRange(@Param("userId") int userId,
                                                        @Param("startDate") Date startDate,
                                                        @Param("endDate") Date endDate);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE orders SET order_item = (" +
+            "SELECT jsonb_agg(" +
+            "    CASE " +
+            "        WHEN subquery.index = 0 THEN " +
+            "            jsonb_set(item, '{order_item_status}', to_jsonb(:newOrderItemStatus), true) " +
+            "        ELSE " +
+            "            item " +
+            "    END" +
+            ") " +
+            "FROM (" +
+            "    SELECT jsonb_array_elements(order_item) AS item, " +
+            "           row_number() OVER () - 1 AS index " +
+            "    FROM orders " +
+            "    WHERE order_id = :orderId" +
+            ") AS subquery" +
+            ") " +
+            "WHERE order_id = :orderId",
+            nativeQuery = true)
+    void updateOrderItemStatus(@Param("orderId") int orderId, @Param("newOrderItemStatus") int newOrderItemStatus);
 }

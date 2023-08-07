@@ -50,7 +50,7 @@ public class UserService {
     }
 
     private static String generatePassword() {
-        return "Pass" + new Random().nextInt(10000);
+        return "Pass" + new Random().nextInt(100000);
     }
 
 }

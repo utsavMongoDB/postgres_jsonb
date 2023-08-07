@@ -78,4 +78,18 @@ public class OrderController {
         return OrderService.findTopProductsInDateRange(startDate, endDate);
     }
 
+
+    /**
+     * Update the order status for a orderId in JSONB array
+     * @param orderId
+     * @param orderStatus
+     * @return
+     */
+    @PutMapping("/updateOrderItemStatus/{orderId}/{orderStatus}")
+    public String updateOrderItemStatus(
+            @PathVariable int orderId,
+            @PathVariable int orderStatus
+    ) {
+        return OrderService.updateOrderItemStatus(orderId, orderStatus);
+    }
 }
