@@ -42,7 +42,7 @@ public class OrderController {
      * @param userId
      * @return
      */
-    @GetMapping("/get/{userId}/{startDate}/{endDate}")
+    @GetMapping("/get/{userId}")
     public List<Object[]> findProductsOrderedByUserInDateRange(@PathVariable int userId) {
         try {
             Date randomStartDate = DateGenerator.generateRandomStartDate();
@@ -59,7 +59,7 @@ public class OrderController {
      * ORDERED by order amount
      * @return
      */
-    @GetMapping("/getOrderAmount/{startDate}/{endDate}")
+    @GetMapping("/getOrderAmount")
     public List<String> getTotalOrderAmountInRange() {
         try {
             Date randomStartDate = DateGenerator.generateRandomStartDate();
@@ -76,7 +76,7 @@ public class OrderController {
      * Find top 5 products in a given date range.
      * @return
      */
-    @GetMapping("/findTopProducts/{startDate}/{endDate}")
+    @GetMapping("/findTopProducts")
     public List<Object[]> findTopProductsInDateRange() {
         try {
             Date randomStartDate = DateGenerator.generateRandomStartDate();
