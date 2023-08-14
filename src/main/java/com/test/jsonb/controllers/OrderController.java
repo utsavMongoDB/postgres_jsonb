@@ -1,6 +1,7 @@
 package com.test.jsonb.controllers;
 
 import com.test.jsonb.models.Order;
+import com.test.jsonb.repo.OrderRepo;
 import com.test.jsonb.utils.DateGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,6 +19,8 @@ public class OrderController {
     
     @Autowired
     private OrderService OrderService;
+    @Autowired
+    private OrderRepo orderRepo;
 
     Random random = new Random();
 
@@ -104,5 +107,10 @@ public class OrderController {
     ) {
         int orderStatus = random.nextInt(100);
         return OrderService.updateOrderItemStatus(orderId, orderStatus);
+    }
+
+    @GetMapping("/findByShipmentId/{shipmentId}")
+    public int findByShipmentId(@PathVariable String shipmentId) {
+        return orderRepo.findByShipmentId(shipmentId);
     }
 }

@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class DateGenerator {
 
-    private static final String MIN_DATE_STR = "2023-01-01";
+    private static final String MIN_DATE_STR = "2023-07-15";
     private static final String MAX_DATE_STR = "2023-07-30";
     private static final Date MIN_DATE;
     private static final Date MAX_DATE;
@@ -34,6 +34,11 @@ public class DateGenerator {
 
         if (endDate.after(MAX_DATE)) {
             endDate = MAX_DATE;
+        }
+
+        if (startDate.equals(endDate)) {
+            calendar.add(Calendar.DATE, 1); // Add one more day
+            endDate = calendar.getTime();
         }
 
         return endDate;

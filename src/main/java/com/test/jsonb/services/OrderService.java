@@ -30,6 +30,7 @@ public class OrderService {
 
     public String updateOrderItemStatus(int orderId, int newOrderItemStatus) {
         orderRepo.updateOrderItemStatus(orderId, newOrderItemStatus);
+        System.out.println("orderId:" + orderId);
         return "Modified orderId: " + orderId;
     }
 

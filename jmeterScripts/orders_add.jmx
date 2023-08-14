@@ -32,7 +32,7 @@
         </LoopController>
         <hashTree>
           <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="counter - ID" enabled="true">
-            <stringProp name="CounterConfig.start">10001</stringProp>
+            <stringProp name="CounterConfig.start">999983</stringProp>
             <stringProp name="CounterConfig.end">1000000</stringProp>
             <stringProp name="CounterConfig.incr">1</stringProp>
             <stringProp name="CounterConfig.name">counter</stringProp>

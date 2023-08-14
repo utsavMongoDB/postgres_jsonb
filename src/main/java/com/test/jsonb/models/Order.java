@@ -77,5 +77,7 @@ public class Order {
     @Column(name = "order_item", columnDefinition = "jsonb")
     private List<Map<String, Object>> orderItem;
 
-    // Constructors, getters, setters, etc.
+    @Type(type = "jsonb")
+    @Column(name = "delivery_details", columnDefinition = "jsonb")
+    private Map<String, Object> deliveryDetails;
 }

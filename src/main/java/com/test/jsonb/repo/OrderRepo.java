@@ -58,25 +58,39 @@ public interface OrderRepo extends JpaRepository<Order, String> {
                                                        @Param("endDate") Date endDate);
 
 
+    @Query(value = "SELECT order_id FROM orders o WHERE o.delivery_details ->> 'shipment_id'= :shipmentId", nativeQuery = true)
+    int findByShipmentId(@Param("shipmentId") String shipmentId);
+
+
     @Transactional
     @Modifying
-    @Query(value = "UPDATE orders SET order_item = (" +
-            "SELECT jsonb_agg(" +
-            "    CASE " +
-            "        WHEN subquery.index = 0 THEN " +
-            "            jsonb_set(item, '{order_item_status}', to_jsonb(:newOrderItemStatus), true) " +
-            "        ELSE " +
-            "            item " +
-            "    END" +
-            ") " +
-            "FROM (" +
-            "    SELECT jsonb_array_elements(order_item) AS item, " +
-            "           row_number() OVER () - 1 AS index " +
-            "    FROM orders " +
-            "    WHERE order_id = :orderId" +
-            ") AS subquery" +
-            ") " +
+//    @Query(value = "UPDATE orders " +
+//            "SET order_item = (SELECT jsonb_agg(updated_item) " +
+//            "                  FROM (SELECT CASE " +
+//            "                                   WHEN subquery.index = 0 THEN " +
+//            "                                       jsonb_set(item, '{order_item_status}', to_jsonb(:newOrderItemStatus), true) " +
+//            "                                   ELSE " +
+//            "                                       item " +
+//            "                               END AS updated_item " +
+//            "                        FROM (SELECT jsonb_array_elements(order_item) AS item, " +
+//            "                                     generate_series(0, jsonb_array_length(order_item) - 1) AS index " +
+//            "                              FROM orders " +
+//            "                              WHERE order_id = :orderId) AS subquery) AS updated_array) " +
+//            "WHERE order_id = :orderId",
+//            nativeQuery = true)
+    @Query(value = "WITH updated_item AS (" +
+            "    SELECT jsonb_set(item, '{order_item_status}', to_jsonb(:newOrderItemStatus), true) AS updated_item " +
+            "    FROM (" +
+            "        SELECT jsonb_array_elements(order_item) AS item " +
+            "        FROM orders " +
+            "        WHERE order_id = :orderId " +
+            "        LIMIT 1" +
+            "    ) AS subquery" +
+            ")" +
+            "UPDATE orders " +
+            "SET order_item = (SELECT jsonb_agg(updated_item) FROM updated_item) " +
             "WHERE order_id = :orderId",
             nativeQuery = true)
     void updateOrderItemStatus(@Param("orderId") int orderId, @Param("newOrderItemStatus") int newOrderItemStatus);
+
 }

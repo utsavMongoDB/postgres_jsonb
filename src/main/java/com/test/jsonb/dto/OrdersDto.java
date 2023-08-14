@@ -63,4 +63,7 @@ public class OrdersDto {
     @JsonProperty("order_item")
     private List<Map<String, Object>> orderItem;
 
+    @JsonProperty("delivery_details")
+    private Map<String, Object> deliveryDetails;
+
 }
