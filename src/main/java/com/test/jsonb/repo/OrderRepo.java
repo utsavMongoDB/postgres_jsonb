@@ -84,7 +84,6 @@ public interface OrderRepo extends JpaRepository<Order, String> {
             "        SELECT jsonb_array_elements(order_item) AS item " +
             "        FROM orders " +
             "        WHERE order_id = :orderId " +
-            "        LIMIT 1" +
             "    ) AS subquery" +
             ")" +
             "UPDATE orders " +
