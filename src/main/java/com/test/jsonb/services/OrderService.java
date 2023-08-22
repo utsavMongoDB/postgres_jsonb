@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.jsonb.dto.OrdersDto;
 import com.test.jsonb.mapper.Mapper;
 import com.test.jsonb.models.Order;
-import com.test.jsonb.models.Product;
 import com.test.jsonb.repo.OrderRepo;
 import com.test.jsonb.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +22,17 @@ public class OrderService {
     private ProductRepo productRepo;
     @Autowired
     private Mapper mapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public List<Order> findAllOrders() {
         return orderRepo.findAll();
     }
 
-//    public List<Product> findProductsOrderedByUserInDateRange(int userId, Date startDate , Date endDate) {
-//        return orderRepo.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
-//    }
-
-    public List<Product> findProductsOrderedByUserInDateRange(int userId, Date startDate, Date endDate) {
-        List<String> orderedProductIds = orderRepo.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
-        return productRepo.findAllById(orderedProductIds);
-    }
-
     public String updateOrderItemStatus(int orderId, int newOrderItemStatus) {
         orderRepo.updateOrderItemStatus(orderId, newOrderItemStatus);
         System.out.println("orderId:" + orderId);
-        return "Modified orderId: " + orderId;
+        return "Order modified: " + orderId;
     }
 
 //    public List<Integer> getTotalOrderAmountInRange(Date startDate, Date endDate) {

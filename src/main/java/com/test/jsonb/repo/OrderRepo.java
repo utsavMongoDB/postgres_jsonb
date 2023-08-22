@@ -2,12 +2,17 @@ package com.test.jsonb.repo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import com.test.jsonb.dto.ProductDto;
 import com.test.jsonb.models.Order;
+import com.test.jsonb.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -29,7 +34,6 @@ public interface OrderRepo extends JpaRepository<Order, String> {
 //    List<Integer> getTotalOrderAmountInRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
-    // TODO: Top 5 products, items in Date range.
     @Query(value = "SELECT product_id " +
             "FROM ( " +
             "    SELECT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
@@ -41,14 +45,21 @@ public interface OrderRepo extends JpaRepository<Order, String> {
     List<Integer> findTopProductsInDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
-            "FROM orders " +
-            "WHERE user_id = :userId " +
-            "AND order_date BETWEEN :startDate AND :endDate")
-    List<String> findProductsOrderedByUserInDateRange(@Param("userId") int userId,
+    @Query(value =
+            "SELECT " +
+                    " jsonb_agg(p)::::text AS products " +
+                    "FROM product p " +
+                    "JOIN ( " +
+                    "    SELECT DISTINCT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
+                    "    FROM orders " +
+                    "    WHERE user_id = :userId " +
+                    "    AND order_date BETWEEN :startDate AND :endDate " +
+                    ") AS ordered_products " +
+                    "ON p.product_id = ordered_products.product_id",
+            nativeQuery = true)
+    String findProductsOrderedByUserInDateRange(@Param("userId") int userId,
                                                        @Param("startDate") Date startDate,
                                                        @Param("endDate") Date endDate);
-
 
     @Query(value = "SELECT * FROM orders o WHERE o.delivery_details ->> 'shipment_id'= :shipmentId", nativeQuery = true)
     Order findByShipmentId(@Param("shipmentId") String shipmentId);

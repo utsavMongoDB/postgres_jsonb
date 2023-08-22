@@ -17,4 +17,5 @@ public interface Mapper {
     User toUser(UserDto userDto);
 
     Product toProduct(ProductDto productDto);
+    ProductDto toProductDto(Product product);
 }

@@ -1,17 +1,16 @@
 package com.test.jsonb.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.jsonb.models.Order;
-import com.test.jsonb.models.Product;
 import com.test.jsonb.repo.OrderRepo;
 import com.test.jsonb.utils.DateGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import com.test.jsonb.services.OrderService;
 
 import java.util.*;
-import java.util.random.RandomGenerator;
 
 
 @RestController
@@ -37,15 +36,19 @@ public class OrderController {
 
     /**
      * Find all products ordered by a user in a particular date range
+     *
      * @param userId
      * @return
      */
     @GetMapping("/get/{userId}")
-    public List<Product> findProductsOrderedByUserInDateRange(@PathVariable int userId) {
+    public JsonNode findProductsOrderedByUserInDateRange(@PathVariable int userId) {
         try {
             Date randomStartDate = DateGenerator.generateRandomStartDate();
             Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
-            return OrderService.findProductsOrderedByUserInDateRange(userId, randomStartDate, randomEndDate);
+            String query_result = orderRepo.findProductsOrderedByUserInDateRange(userId, randomStartDate, randomEndDate);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readTree(query_result);
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
