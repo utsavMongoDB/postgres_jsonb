@@ -9,6 +9,7 @@ import com.test.jsonb.mapper.Mapper;
 import com.test.jsonb.models.Order;
 import com.test.jsonb.models.Product;
 import com.test.jsonb.repo.OrderRepo;
+import com.test.jsonb.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +19,21 @@ public class OrderService {
     @Autowired
     private OrderRepo orderRepo;
     @Autowired
+    private ProductRepo productRepo;
+    @Autowired
     private Mapper mapper;
 
     public List<Order> findAllOrders() {
         return orderRepo.findAll();
     }
 
-    public List<Object[]> findProductsOrderedByUserInDateRange(int userId, Date startDate , Date endDate) {
-        return orderRepo.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
+//    public List<Product> findProductsOrderedByUserInDateRange(int userId, Date startDate , Date endDate) {
+//        return orderRepo.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
+//    }
+
+    public List<Product> findProductsOrderedByUserInDateRange(int userId, Date startDate, Date endDate) {
+        List<String> orderedProductIds = orderRepo.findProductsOrderedByUserInDateRange(userId, startDate, endDate);
+        return productRepo.findAllById(orderedProductIds);
     }
 
     public String updateOrderItemStatus(int orderId, int newOrderItemStatus) {
@@ -34,11 +42,11 @@ public class OrderService {
         return "Modified orderId: " + orderId;
     }
 
-    public List<String> getTotalOrderAmountInRange(Date startDate, Date endDate) {
-        return orderRepo.getTotalOrderAmountInRange(startDate, endDate);
-    }
+//    public List<Integer> getTotalOrderAmountInRange(Date startDate, Date endDate) {
+//        return orderRepo.getTotalOrderAmountInRange(startDate, endDate);
+//    }
 
-    public List<Object[]> findTopProductsInDateRange(Date startDate, Date endDate) {
+    public List<Integer> findTopProductsInDateRange(Date startDate, Date endDate) {
         return orderRepo.findTopProductsInDateRange(startDate, endDate);
     }
 

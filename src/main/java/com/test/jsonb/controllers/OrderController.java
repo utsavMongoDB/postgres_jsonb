@@ -1,6 +1,7 @@
 package com.test.jsonb.controllers;
 
 import com.test.jsonb.models.Order;
+import com.test.jsonb.models.Product;
 import com.test.jsonb.repo.OrderRepo;
 import com.test.jsonb.utils.DateGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/get/{userId}")
-    public List<Object[]> findProductsOrderedByUserInDateRange(@PathVariable int userId) {
+    public List<Product> findProductsOrderedByUserInDateRange(@PathVariable int userId) {
         try {
             Date randomStartDate = DateGenerator.generateRandomStartDate();
             Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
@@ -51,22 +52,22 @@ public class OrderController {
         }
     }
 
-    /**
-     * Returns list of all users in the database with the total order amount ordered,
-     * ORDERED by order amount
-     * @return
-     */
-    @GetMapping("/getOrderAmount")
-    public List<String> getTotalOrderAmountInRange() {
-        try {
-            Date randomStartDate = DateGenerator.generateRandomStartDate();
-            Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
-            return OrderService.getTotalOrderAmountInRange(randomStartDate, randomEndDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    /**
+//     * Returns list of all users in the database with the total order amount ordered,
+//     * ORDERED by order amount
+//     * @return
+//     */
+//    @GetMapping("/getOrderAmount")
+//    public List<Integer> getTotalOrderAmountInRange() {
+//        try {
+//            Date randomStartDate = DateGenerator.generateRandomStartDate();
+//            Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
+//            return OrderService.getTotalOrderAmountInRange(randomStartDate, randomEndDate);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
 
     /**
@@ -74,7 +75,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/findTopProducts")
-    public List<Object[]> findTopProductsInDateRange() {
+    public List<Integer> findTopProductsInDateRange() {
         try {
             Date randomStartDate = DateGenerator.generateRandomStartDate();
             Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
@@ -103,14 +104,5 @@ public class OrderController {
     @GetMapping("/findByShipmentId/{shipmentId}")
     public Order findByShipmentId(@PathVariable String shipmentId) {
         return orderRepo.findByShipmentId(shipmentId);
-    }
-
-    /**
-     * Returns all orders in the Database
-     * @return
-     */
-    @GetMapping("/all")
-    public List<Order> findAllOrders() {
-        return OrderService.findAllOrders();
     }
 }

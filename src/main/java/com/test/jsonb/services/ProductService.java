@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -30,7 +32,6 @@ public class ProductService {
         productRepo.save(entity);
         return "Added Product Successfully";
     }
-
 
     public static ProductDto generateProductDto(int productId) {
         ProductDto productDto = new ProductDto();

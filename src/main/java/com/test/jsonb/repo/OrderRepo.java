@@ -19,41 +19,33 @@ public interface OrderRepo extends JpaRepository<Order, String> {
     @Query(value = "SELECT sub_total FROM orders WHERE order_id = :orderId", nativeQuery = true)
     List<String> findSubTotalByOrderId(@Param("orderId") Integer orderId);
 
-    // Get total order amount in a given date range
-    @Query(value = "SELECT SUM(o.total_amount) AS total_order_amount " +
-            "FROM orders o " +
-            "JOIN users u ON o.user_id = u.user_id " +
-            "WHERE o.order_date BETWEEN :startDate AND :endDate " +
-            "GROUP BY u.username " +
-            "ORDER BY total_order_amount DESC ", nativeQuery = true)
-    List<String> getTotalOrderAmountInRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+//    // Get total order amount in a given date range
+//    @Query(value = "SELECT SUM(o.total_amount) AS total_order_amount " +
+//            "FROM orders o " +
+//            "JOIN users u ON o.user_id = u.user_id " +
+//            "WHERE o.order_date BETWEEN :startDate AND :endDate " +
+//            "GROUP BY u.username " +
+//            "ORDER BY total_order_amount DESC ", nativeQuery = true)
+//    List<Integer> getTotalOrderAmountInRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
     // TODO: Top 5 products, items in Date range.
-    @Query(value = "SELECT product_id, COUNT(*) AS order_count " +
+    @Query(value = "SELECT product_id " +
             "FROM ( " +
             "    SELECT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
             "    FROM orders " +
             "    WHERE order_date >= :startDate AND order_date <= :endDate " +
             ") AS extracted_products " +
             "GROUP BY product_id " +
-            "ORDER BY order_count DESC " +
             "LIMIT 5", nativeQuery = true)
-    List<Object[]> findTopProductsInDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<Integer> findTopProductsInDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
-    @Query(value =
-            "SELECT p.* " +
-                    "FROM product p " +
-                    "JOIN ( " +
-                    "    SELECT DISTINCT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
-                    "    FROM orders " +
-                    "    WHERE user_id = :userId " +
-                    "    AND order_date BETWEEN :startDate AND :endDate " +
-                    ") AS ordered_products " +
-                    "ON p.product_id = ordered_products.product_id",
-            nativeQuery = true)
-    List<Object[]> findProductsOrderedByUserInDateRange(@Param("userId") int userId,
+    @Query(nativeQuery = true, value = "SELECT DISTINCT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
+            "FROM orders " +
+            "WHERE user_id = :userId " +
+            "AND order_date BETWEEN :startDate AND :endDate")
+    List<String> findProductsOrderedByUserInDateRange(@Param("userId") int userId,
                                                        @Param("startDate") Date startDate,
                                                        @Param("endDate") Date endDate);
 
