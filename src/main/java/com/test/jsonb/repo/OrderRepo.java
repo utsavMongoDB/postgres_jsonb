@@ -20,7 +20,7 @@ public interface OrderRepo extends JpaRepository<Order, String> {
     List<String> findSubTotalByOrderId(@Param("orderId") Integer orderId);
 
     // Get total order amount in a given date range
-    @Query(value = "SELECT u.username, SUM(o.total_amount) AS total_order_amount " +
+    @Query(value = "SELECT SUM(o.total_amount) AS total_order_amount " +
             "FROM orders o " +
             "JOIN users u ON o.user_id = u.user_id " +
             "WHERE o.order_date BETWEEN :startDate AND :endDate " +
@@ -58,26 +58,12 @@ public interface OrderRepo extends JpaRepository<Order, String> {
                                                        @Param("endDate") Date endDate);
 
 
-    @Query(value = "SELECT order_id FROM orders o WHERE o.delivery_details ->> 'shipment_id'= :shipmentId", nativeQuery = true)
-    int findByShipmentId(@Param("shipmentId") String shipmentId);
+    @Query(value = "SELECT * FROM orders o WHERE o.delivery_details ->> 'shipment_id'= :shipmentId", nativeQuery = true)
+    Order findByShipmentId(@Param("shipmentId") String shipmentId);
 
 
     @Transactional
     @Modifying
-//    @Query(value = "UPDATE orders " +
-//            "SET order_item = (SELECT jsonb_agg(updated_item) " +
-//            "                  FROM (SELECT CASE " +
-//            "                                   WHEN subquery.index = 0 THEN " +
-//            "                                       jsonb_set(item, '{order_item_status}', to_jsonb(:newOrderItemStatus), true) " +
-//            "                                   ELSE " +
-//            "                                       item " +
-//            "                               END AS updated_item " +
-//            "                        FROM (SELECT jsonb_array_elements(order_item) AS item, " +
-//            "                                     generate_series(0, jsonb_array_length(order_item) - 1) AS index " +
-//            "                              FROM orders " +
-//            "                              WHERE order_id = :orderId) AS subquery) AS updated_array) " +
-//            "WHERE order_id = :orderId",
-//            nativeQuery = true)
     @Query(value = "WITH updated_item AS (" +
             "    SELECT jsonb_set(item, '{order_item_status}', to_jsonb(:newOrderItemStatus), true) AS updated_item " +
             "    FROM (" +
@@ -91,5 +77,4 @@ public interface OrderRepo extends JpaRepository<Order, String> {
             "WHERE order_id = :orderId",
             nativeQuery = true)
     void updateOrderItemStatus(@Param("orderId") int orderId, @Param("newOrderItemStatus") int newOrderItemStatus);
-
 }

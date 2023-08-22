@@ -30,17 +30,8 @@ public class OrderController {
      * @return
      */
     @PostMapping("/add/{orderId}")
-    public String saveOrders(@PathVariable int orderId) {
+    public Order saveOrders(@PathVariable Long orderId) {
         return OrderService.saveOrders(orderId);
-    }
-
-    /**
-     * Returns all orders in the Database
-     * @return
-     */
-    @GetMapping("/all")
-    public List<Order> findAllOrders() {
-        return OrderService.findAllOrders();
     }
 
     /**
@@ -110,7 +101,16 @@ public class OrderController {
     }
 
     @GetMapping("/findByShipmentId/{shipmentId}")
-    public int findByShipmentId(@PathVariable String shipmentId) {
+    public Order findByShipmentId(@PathVariable String shipmentId) {
         return orderRepo.findByShipmentId(shipmentId);
+    }
+
+    /**
+     * Returns all orders in the Database
+     * @return
+     */
+    @GetMapping("/all")
+    public List<Order> findAllOrders() {
+        return OrderService.findAllOrders();
     }
 }

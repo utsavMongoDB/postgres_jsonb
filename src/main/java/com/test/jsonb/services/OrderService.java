@@ -42,16 +42,10 @@ public class OrderService {
         return orderRepo.findTopProductsInDateRange(startDate, endDate);
     }
 
-    public String saveOrders(int orderId) {
-        try {
-            OrdersDto ordersDto = generateOrdersDto(orderId);
-            Order entity = mapper.toOrder(ordersDto);
-            orderRepo.save(entity);
-            return "Added Successfully";
-        }
-        catch (Exception e) {
-            return "Error Adding Order";
-        }
+    public Order saveOrders(Long orderId) {
+        OrdersDto ordersDto = generateOrdersDto(orderId);
+        Order entity = mapper.toOrder(ordersDto);
+        return orderRepo.save(entity);
     }
 
     public Object findOrderById(String id) {
@@ -59,7 +53,7 @@ public class OrderService {
     }
 
 
-    public static OrdersDto generateOrdersDto(int orderId) {
+    public static OrdersDto generateOrdersDto(Long orderId) {
         Random random = new Random();
 
         LocalDate startDate = LocalDate.of(2023, 7, 15);
@@ -84,6 +78,7 @@ public class OrderService {
         List<Map<String, Object>> orderItems = generateRandomOrderItems();
 
         OrdersDto ordersDto = new OrdersDto();
+        ordersDto.setOrderId(orderId);
         ordersDto.setOrderDate(String.valueOf(orderDate));
         ordersDto.setClientName(clientName);
         ordersDto.setClientContact(clientContact);
