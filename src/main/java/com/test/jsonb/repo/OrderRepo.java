@@ -41,7 +41,9 @@ public interface OrderRepo extends JpaRepository<Order, String> {
             "    WHERE order_date >= :startDate AND order_date <= :endDate " +
             ") AS extracted_products " +
             "GROUP BY product_id " +
-            "LIMIT 5", nativeQuery = true)
+            "ORDER BY COUNT(*) DESC " +
+            "LIMIT 5",
+            nativeQuery = true)
     List<Integer> findTopProductsInDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
