@@ -97,7 +97,7 @@ public class OrderService {
         ordersDto.setOrderStatus(orderStatus);
         ordersDto.setUserId(userId);
         ordersDto.setOrderItem(orderItems);
-
+        ordersDto.setDeliveryDetails(generateDeliveryDetails(orderId));
         return ordersDto;
     }
 
@@ -133,6 +133,17 @@ public class OrderService {
 
         return orderItems;
     }
+
+    private static Map<String, Object> generateDeliveryDetails(Long orderId) {
+        Random random = new Random();
+        Map<String, Object> orderItem = new HashMap<>();
+        orderItem.put("shipment_id", orderId);
+        orderItem.put("log_com_code", generateRandomNumber(1, 100));
+        orderItem.put("delivery_status", random.nextInt(2));
+
+        return orderItem;
+    }
+
 
     private static int generateRandomNumber(int min, int max) {
         return new Random().nextInt(max - min + 1) + min;
