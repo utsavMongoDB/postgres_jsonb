@@ -106,7 +106,7 @@ public class OrderController {
         return orderItemService.saveOrderItem(orderId);
     }
 
-    @GetMapping("/findByShipmentId_v2/{shipmentId}")
+    @GetMapping("/findOrdersByShipmentId_v2/{shipmentId}")
     public List<OrderItem> findByShipmentId_v2(
             @PathVariable String shipmentId
     ) {
