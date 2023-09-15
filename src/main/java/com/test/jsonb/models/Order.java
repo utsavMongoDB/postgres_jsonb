@@ -23,7 +23,7 @@ public class Order {
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Long orderId;
+    private Integer orderId;
 
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;
@@ -73,9 +73,9 @@ public class Order {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Type(type = "jsonb")
-    @Column(name = "order_item", columnDefinition = "jsonb")
-    private List<Map<String, Object>> orderItem;
+//    @Type(type = "jsonb")
+//    @Column(name = "order_item", columnDefinition = "jsonb")
+//    private List<Map<String, Object>> orderItem;
 
     @Type(type = "jsonb")
     @Column(name = "delivery_details", columnDefinition = "jsonb")

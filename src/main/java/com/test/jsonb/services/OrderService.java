@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.jsonb.dto.OrdersDto;
 import com.test.jsonb.mapper.Mapper;
 import com.test.jsonb.models.Order;
+import com.test.jsonb.models.OrderItem;
 import com.test.jsonb.repo.OrderRepo;
 import com.test.jsonb.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,28 +36,28 @@ public class OrderService {
         return "Order modified: " + orderId;
     }
 
-//    public List<Integer> getTotalOrderAmountInRange(Date startDate, Date endDate) {
-//        return orderRepo.getTotalOrderAmountInRange(startDate, endDate);
-//    }
-
     public List<Integer> findTopProductsInDateRange(Date startDate, Date endDate) {
         return orderRepo.findTopProductsInDateRange(startDate, endDate);
     }
 
-    public Order saveOrders(Long orderId) {
-        OrdersDto ordersDto = generateOrdersDto(orderId);
-        Order entity = mapper.toOrder(ordersDto);
-        return orderRepo.save(entity);
+    public Order saveOrders(Integer orderId) throws Exception {
+        try {
+            OrdersDto ordersDto = generateOrdersDto(orderId);
+            Order entity = mapper.toOrder(ordersDto);
+            return orderRepo.save(entity);
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
     }
 
     public Object findOrderById(String id) {
         return orderRepo.findById(id);
     }
 
-
-    public static OrdersDto generateOrdersDto(Long orderId) {
+    public static OrdersDto generateOrdersDto(Integer orderId) {
         Random random = new Random();
-
+        System.out.println("oid : " + orderId);
         LocalDate startDate = LocalDate.of(2023, 7, 15);
         LocalDate endDate = LocalDate.of(2023, 7, 31);
         LocalDate orderDate = generateRandomDate(startDate, endDate);
@@ -76,7 +77,7 @@ public class OrderService {
         String gstn = generateRandomGSTN();
         int orderStatus = 0;
         Long userId = (long) generateRandomNumber(1, 10000);
-        List<Map<String, Object>> orderItems = generateRandomOrderItems();
+//        List<Map<String, Object>> orderItems = generateRandomOrderItems();
 
         OrdersDto ordersDto = new OrdersDto();
         ordersDto.setOrderId(orderId);
@@ -96,7 +97,7 @@ public class OrderService {
         ordersDto.setGstn(gstn);
         ordersDto.setOrderStatus(orderStatus);
         ordersDto.setUserId(userId);
-        ordersDto.setOrderItem(orderItems);
+//        ordersDto.setOrderItem(orderItems);
         ordersDto.setDeliveryDetails(generateDeliveryDetails(orderId));
         return ordersDto;
     }
@@ -117,7 +118,7 @@ public class OrderService {
 
     private static List<Map<String, Object>> generateRandomOrderItems() {
         Random random = new Random();
-        int itemCount = random.nextInt(3) + 3; // Generate between 3 and 5 items
+        int itemCount = random.nextInt(0) + 3; // Generate between 3 and 5 items
 
         List<Map<String, Object>> orderItems = new ArrayList<>();
         for (int i = 0; i < itemCount; i++) {
@@ -134,7 +135,7 @@ public class OrderService {
         return orderItems;
     }
 
-    private static Map<String, Object> generateDeliveryDetails(Long orderId) {
+    private static Map<String, Object> generateDeliveryDetails(Integer orderId) {
         Random random = new Random();
         Map<String, Object> orderItem = new HashMap<>();
         orderItem.put("shipment_id", orderId);
@@ -143,7 +144,6 @@ public class OrderService {
 
         return orderItem;
     }
-
 
     private static int generateRandomNumber(int min, int max) {
         return new Random().nextInt(max - min + 1) + min;

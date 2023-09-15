@@ -3,14 +3,13 @@ package com.test.jsonb.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Map;
 
 @Data
 public class OrdersDto {
 
-    @JsonProperty("orderId")
-    private Long orderId;
+    @JsonProperty("order_id")
+    private Integer orderId;
 
     @JsonProperty("order_date")
     private String orderDate;
@@ -60,8 +59,8 @@ public class OrdersDto {
     @JsonProperty("user_id")
     private Long userId;
 
-    @JsonProperty("order_item")
-    private List<Map<String, Object>> orderItem;
+//    @JsonProperty("order_item")
+//    private List<Map<String, Object>> orderItem;
 
     @JsonProperty("delivery_details")
     private Map<String, Object> deliveryDetails;

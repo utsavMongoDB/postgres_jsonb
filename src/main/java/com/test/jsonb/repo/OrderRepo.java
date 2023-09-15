@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import com.test.jsonb.dto.ProductDto;
 import com.test.jsonb.models.Order;
+import com.test.jsonb.models.OrderItem;
 import com.test.jsonb.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,19 +21,12 @@ import javax.transaction.Transactional;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, String> {
 
+    @Query(value = "SELECT COUNT(*) FROM orders WHERE order_id = :orderId", nativeQuery = true)
+    Integer findOrderExists(@Param("orderId") Long orderId);
+
     // Get a total of orders based on order ID
     @Query(value = "SELECT sub_total FROM orders WHERE order_id = :orderId", nativeQuery = true)
     List<String> findSubTotalByOrderId(@Param("orderId") Integer orderId);
-
-//    // Get total order amount in a given date range
-//    @Query(value = "SELECT SUM(o.total_amount) AS total_order_amount " +
-//            "FROM orders o " +
-//            "JOIN users u ON o.user_id = u.user_id " +
-//            "WHERE o.order_date BETWEEN :startDate AND :endDate " +
-//            "GROUP BY u.username " +
-//            "ORDER BY total_order_amount DESC ", nativeQuery = true)
-//    List<Integer> getTotalOrderAmountInRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
-
 
     @Query(value = "SELECT product_id " +
             "FROM ( " +
@@ -48,16 +42,15 @@ public interface OrderRepo extends JpaRepository<Order, String> {
 
 
     @Query(value =
-            "SELECT " +
-                    " jsonb_agg(p)::::text AS products " +
-                    "FROM product p " +
-                    "JOIN ( " +
-                    "    SELECT DISTINCT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
-                    "    FROM orders " +
-                    "    WHERE user_id = :userId " +
-                    "    AND order_date BETWEEN :startDate AND :endDate " +
-                    ") AS ordered_products " +
-                    "ON p.product_id = ordered_products.product_id",
+            "SELECT jsonb_agg(p)::::text AS products " +
+            "FROM product p " +
+            "JOIN ( " +
+            "    SELECT DISTINCT (jsonb_array_elements(order_item)->>'product_id')::::int AS product_id " +
+            "    FROM orders " +
+            "    WHERE user_id = :userId " +
+            "    AND order_date BETWEEN :startDate AND :endDate " +
+            ") AS ordered_products " +
+            "ON p.product_id = ordered_products.product_id",
             nativeQuery = true)
     String findProductsOrderedByUserInDateRange(@Param("userId") int userId,
                                                        @Param("startDate") Date startDate,

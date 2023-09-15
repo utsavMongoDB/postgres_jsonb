@@ -3,7 +3,10 @@ package com.test.jsonb.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.jsonb.models.Order;
+import com.test.jsonb.models.OrderItem;
+import com.test.jsonb.repo.OrderItemRepo;
 import com.test.jsonb.repo.OrderRepo;
+import com.test.jsonb.services.OrderItemService;
 import com.test.jsonb.utils.DateGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,11 @@ public class OrderController {
     @Autowired
     private OrderService OrderService;
     @Autowired
+    private OrderItemService orderItemService;
+    @Autowired
     private OrderRepo orderRepo;
+    @Autowired
+    private OrderItemRepo orderItemRepo;
 
     Random random = new Random();
 
@@ -30,7 +37,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/add/{orderId}")
-    public Order saveOrders(@PathVariable Long orderId) {
+    public Order saveOrders(@PathVariable Integer orderId) throws Exception {
         return OrderService.saveOrders(orderId);
     }
 
@@ -54,23 +61,6 @@ public class OrderController {
             return null;
         }
     }
-
-//    /**
-//     * Returns list of all users in the database with the total order amount ordered,
-//     * ORDERED by order amount
-//     * @return
-//     */
-//    @GetMapping("/getOrderAmount")
-//    public List<Integer> getTotalOrderAmountInRange() {
-//        try {
-//            Date randomStartDate = DateGenerator.generateRandomStartDate();
-//            Date randomEndDate = DateGenerator.generateRandomEndDate(randomStartDate);
-//            return OrderService.getTotalOrderAmountInRange(randomStartDate, randomEndDate);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 
 
     /**
@@ -106,5 +96,20 @@ public class OrderController {
     @GetMapping("/findByShipmentId/{shipmentId}")
     public Order findByShipmentId(@PathVariable String shipmentId) {
         return orderRepo.findByShipmentId(shipmentId);
+    }
+
+
+    @PostMapping("/addOrderItems/{orderId}")
+    public String addOrderItems(
+            @PathVariable int orderId
+    ) {
+        return orderItemService.saveOrderItem(orderId);
+    }
+
+    @GetMapping("/findByShipmentId_v2/{shipmentId}")
+    public List<OrderItem> findByShipmentId_v2(
+            @PathVariable String shipmentId
+    ) {
+        return orderItemRepo.findOrdersByShipmentId_v2(shipmentId);
     }
 }
