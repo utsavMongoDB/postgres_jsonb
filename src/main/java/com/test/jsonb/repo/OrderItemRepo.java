@@ -16,4 +16,5 @@ public interface OrderItemRepo extends JpaRepository<OrderItem, String> {
             "INNER JOIN order_items ON orders.order_id = order_items.order_id " +
             "WHERE orders.delivery_details ->> 'shipment_id'= :shipmentId", nativeQuery = true)
     List<OrderItem> findOrdersByShipmentId_v2(@Param("shipmentId") String shipmentId);
+
 }
